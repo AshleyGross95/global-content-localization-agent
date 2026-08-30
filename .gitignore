@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+
+# Environment
+.env
+
+# Streamlit
+.streamlit/
+
+# Runtime-generated audit trail (created fresh by running the demo)
+data/synthetic/audit_log.json
+
+# OS
+.DS_Store

@@ -1,0 +1,72 @@
+[
+  {
+    "term": "Northfield Cloud",
+    "note": "Primary brand name.",
+    "es": "do not translate, keep as-is",
+    "de": "do not translate, keep as-is",
+    "ja": "do not translate, keep as-is"
+  },
+  {
+    "term": "Nimbus Sync",
+    "note": "Product feature name.",
+    "es": "do not translate, keep as-is",
+    "de": "do not translate, keep as-is",
+    "ja": "do not translate, keep as-is"
+  },
+  {
+    "term": "Premium Plan",
+    "note": "Paid subscription tier brand name.",
+    "es": "do not translate, keep as-is",
+    "de": "do not translate, keep as-is",
+    "ja": "do not translate, keep as-is"
+  },
+  {
+    "term": "Northfield ID",
+    "note": "Account/login identifier brand name.",
+    "es": "do not translate, keep as-is",
+    "de": "do not translate, keep as-is",
+    "ja": "do not translate, keep as-is"
+  },
+  {
+    "term": "Free Trial",
+    "note": "Generic term, should use the market's approved translation.",
+    "es": "use approved translation: prueba gratuita",
+    "de": "use approved translation: kostenlose Testversion",
+    "ja": "use approved translation: 無料トライアル"
+  },
+  {
+    "term": "Customer Success Team",
+    "note": "Generic term, should use the market's approved translation.",
+    "es": "use approved translation: equipo de exito del cliente",
+    "de": "use approved translation: Kundenerfolgsteam",
+    "ja": "use approved translation: カスタマーサクセスチーム"
+  },
+  {
+    "term": "Terms of Service",
+    "note": "Legal document name, should use the market's approved translation.",
+    "es": "use approved translation: Terminos de Servicio",
+    "de": "use approved translation: Nutzungsbedingungen",
+    "ja": "use approved translation: 利用規約"
+  },
+  {
+    "term": "Data Privacy Policy",
+    "note": "Legal document name, should use the market's approved translation.",
+    "es": "use approved translation: Politica de Privacidad de Datos",
+    "de": "use approved translation: Datenschutzrichtlinie",
+    "ja": "use approved translation: データプライバシーポリシー"
+  },
+  {
+    "term": "24/7 Support",
+    "note": "Generic term, should use the market's approved translation.",
+    "es": "use approved translation: soporte 24/7",
+    "de": "use approved translation: 24/7-Support",
+    "ja": "use approved translation: 24時間365日サポート"
+  },
+  {
+    "term": "Auto-Renewal",
+    "note": "Generic term, should use the market's approved translation.",
+    "es": "use approved translation: renovacion automatica",
+    "de": "use approved translation: automatische Verlaengerung",
+    "ja": "use approved translation: 自動更新"
+  }
+]

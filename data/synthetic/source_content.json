@@ -1,0 +1,20 @@
+[
+  {
+    "id": "welcome-email-01",
+    "title": "Product Launch Email",
+    "asset_type": "marketing email",
+    "body": "Welcome to Northfield Cloud! Your Free Trial of the Premium Plan starts today. Try Nimbus Sync to keep every device up to date automatically. Our Customer Success Team is available around the clock. Review our Terms of Service and Data Privacy Policy before you get started."
+  },
+  {
+    "id": "landing-snippet-01",
+    "title": "Landing Page Hero Snippet",
+    "asset_type": "landing page",
+    "body": "Northfield Cloud gives growing teams one place to store, sync, and share their work. Start a Free Trial of the Premium Plan in minutes. Nimbus Sync keeps your files current across every device, with 24/7 Support whenever you need help."
+  },
+  {
+    "id": "renewal-notice-01",
+    "title": "Subscription Renewal Notice",
+    "asset_type": "transactional notice",
+    "body": "This is a reminder that your Northfield Cloud Premium Plan is set for Auto-Renewal next month. If you would like to make changes, contact our Customer Success Team before the renewal date. Your Northfield ID and billing details remain unchanged."
+  }
+]

@@ -1,0 +1,23 @@
+{
+  "es": {
+    "market_name": "Spain (Spanish)",
+    "requires_legal_review": false,
+    "requires_cultural_review": true,
+    "cultural_review_reason": "Fictional regional-slang review policy: marketing copy for the Spain market is checked for casual idioms that do not travel well to Latin American Spanish readers.",
+    "formality_note": "Use the formal 'usted' register for external business communications; avoid casual regional slang."
+  },
+  "de": {
+    "market_name": "Germany (German)",
+    "requires_legal_review": true,
+    "legal_review_reason": "Fictional EU-DE Advertising Disclosure Rule (ADR-7): marketing emails and landing pages distributed in Germany must carry an explicit promotional disclosure line reviewed by legal before send.",
+    "requires_cultural_review": false,
+    "formality_note": "Use formal register (Sie) in German business communications; avoid the informal 'du' form."
+  },
+  "ja": {
+    "market_name": "Japan (Japanese)",
+    "requires_legal_review": false,
+    "requires_cultural_review": true,
+    "cultural_review_reason": "Fictional cultural-fit policy: external business communications are checked for appropriate keigo (honorific register) and indirect phrasing before release.",
+    "formality_note": "Use keigo (polite/formal register) appropriate for external business communication; avoid the direct imperative phrasing common in English marketing copy."
+  }
+}
