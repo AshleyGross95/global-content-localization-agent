@@ -8,6 +8,21 @@
 - Market-specific compliance flagging (e.g. a fictional German advertising-disclosure rule) driven entirely by a data file, so new markets or rules are added without touching code.
 - A native-reviewer approval workflow with a persistent, timestamped audit trail -- the human-in-the-loop pattern that keeps an AI-assisted localization pipeline safe to ship from.
 
+## What this demo is / What this demo is not
+
+**Is:**
+
+- A working, testable demonstration of deterministic glossary compliance checking, data-driven market-rule flagging, and a native-reviewer approval workflow with a persistent, timestamped audit trail.
+- Runnable end-to-end locally, in mock mode, with zero API keys or external services.
+- Backed entirely by synthetic, fictional source content, brand terms, and market rules.
+
+**Is not:**
+
+- Real authentication or authorization -- there is no login, no user accounts, and no access control; the reviewer panel is a UI-level role selector anyone running the app can use.
+- A live integration with any real translation provider, terminology management system, or legal/compliance system -- the only optional live call is the Claude narration/draft path in `src/llm.py`.
+- Hosted anywhere -- there is no deployed URL. Run it locally with the Quickstart commands above.
+- Production-quality, certified, or legally-reviewed translation output, in either mock or live mode. See the Disclaimer at the bottom.
+
 ## Demo moment
 
 Pick the "Product Launch Email" source asset and generate drafts for Spanish, German, and Japanese. The German draft comes back flagged `requires_legal_review` (this demo's fictional EU-DE Advertising Disclosure Rule, ADR-7) with zero glossary violations, because the brand terms "Northfield Cloud," "Nimbus Sync," and "Premium Plan" were correctly left untranslated and "Free Trial" was correctly rendered as "kostenlose Testversion." Switch to the reviewer panel, play the native-speaker role, and approve or reject the draft with notes -- the audit trail immediately shows the `submitted -> approved` (or `rejected`) transition with a timestamp.
@@ -79,6 +94,29 @@ Run the tests:
 ```bash
 pytest
 ```
+
+## Integration status
+
+| Integration | Status | Notes |
+|---|---|---|
+| LLM narration / draft generation (`src/llm.py`) | `mock` by default, optional `real` | `mock` when `MOCK_MODE=true` (default) -- deterministic, clearly-labeled placeholder, no network call. `real` only when `MOCK_MODE=false` and a valid `ANTHROPIC_API_KEY` is set -- calls Claude (`claude-sonnet-5`) for a first-pass draft, still for human review, not a certified translation. |
+| Translation / terminology management system | `mock` | Glossary is a static local JSON file (`data/synthetic/glossary.json`). No live connection to any real TMS or terminology database exists or is planned as a live path in this repo. |
+| Market/compliance rules engine | `mock` | Market rules are a static local JSON file (`data/synthetic/market_rules.json`), including the fictional German advertising-disclosure rule. No live connection to a real legal/compliance system. |
+| Reviewer routing (email/ticketing) | `planned` | The reviewer panel in `app.py` is an in-app UI role selector only; no real notification, email, or ticketing integration exists yet (see Roadmap). |
+| Authentication / authorization | `planned` | Not implemented in this prototype; see the limitation below. |
+| Hosted deployment | `planned` | No hosted demo exists for this prototype -- run locally with the Quickstart commands above. |
+
+## Known limitations
+
+**Prototype limitations (intentionally out of scope for a demo):**
+
+- No real authentication or authorization -- the reviewer role is a UI selector, not an access-controlled login.
+- No persistent database -- source content, glossary, and market rules are static local JSON files; the audit trail (`data/synthetic/audit_log.json`) is a local file, and in-progress drafts live only in the Streamlit session (lost on refresh/restart).
+- No real translation-memory, terminology-management, or legal/compliance system integration -- see Integration status above.
+- No reviewer notification/routing (email, ticketing) -- reviewing happens synchronously in the same app session.
+- Only three target languages (es, de, ja) and three synthetic source assets are included.
+
+**Defects found during this audit:** none. All 12 existing tests pass, and the direct engine-level workflow trace below confirms glossary checking, market-rule flagging, and the reviewer/audit-log workflow all behave as documented.
 
 ## Roadmap
 
