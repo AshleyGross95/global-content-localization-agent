@@ -1,6 +1,8 @@
 # Global Content Localization Agent
 
-**Maturity:** Streamlit Cloud deployment pending · Synthetic data · Human-review localization workflow
+**Maturity:** Live public demo · Synthetic data · Human-review localization workflow
+
+**Live demo:** https://global-content-localization-agent.streamlit.app/ (verified 2026-08-31 — confirmed all 6 target markets render real per-language market rules, mock/live disclosure banner visible)
 
 ## 1. Business problem
 
