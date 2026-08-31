@@ -25,6 +25,9 @@ LANGUAGE_LABELS = {
     "es": "Spanish",
     "de": "German",
     "ja": "Japanese",
+    "fr": "French",
+    "pt-BR": "Portuguese (Brazil)",
+    "ko": "Korean",
 }
 
 

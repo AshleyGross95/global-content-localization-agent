@@ -4,69 +4,99 @@
     "note": "Primary brand name.",
     "es": "do not translate, keep as-is",
     "de": "do not translate, keep as-is",
-    "ja": "do not translate, keep as-is"
+    "ja": "do not translate, keep as-is",
+    "fr": "do not translate, keep as-is",
+    "pt-BR": "do not translate, keep as-is",
+    "ko": "do not translate, keep as-is"
   },
   {
     "term": "Nimbus Sync",
     "note": "Product feature name.",
     "es": "do not translate, keep as-is",
     "de": "do not translate, keep as-is",
-    "ja": "do not translate, keep as-is"
+    "ja": "do not translate, keep as-is",
+    "fr": "do not translate, keep as-is",
+    "pt-BR": "do not translate, keep as-is",
+    "ko": "do not translate, keep as-is"
   },
   {
     "term": "Premium Plan",
     "note": "Paid subscription tier brand name.",
     "es": "do not translate, keep as-is",
     "de": "do not translate, keep as-is",
-    "ja": "do not translate, keep as-is"
+    "ja": "do not translate, keep as-is",
+    "fr": "do not translate, keep as-is",
+    "pt-BR": "do not translate, keep as-is",
+    "ko": "do not translate, keep as-is"
   },
   {
     "term": "Northfield ID",
     "note": "Account/login identifier brand name.",
     "es": "do not translate, keep as-is",
     "de": "do not translate, keep as-is",
-    "ja": "do not translate, keep as-is"
+    "ja": "do not translate, keep as-is",
+    "fr": "do not translate, keep as-is",
+    "pt-BR": "do not translate, keep as-is",
+    "ko": "do not translate, keep as-is"
   },
   {
     "term": "Free Trial",
     "note": "Generic term, should use the market's approved translation.",
     "es": "use approved translation: prueba gratuita",
     "de": "use approved translation: kostenlose Testversion",
-    "ja": "use approved translation: 無料トライアル"
+    "ja": "use approved translation: 無料トライアル",
+    "fr": "use approved translation: essai gratuit",
+    "pt-BR": "use approved translation: teste gratuito",
+    "ko": "use approved translation: 무료 체험"
   },
   {
     "term": "Customer Success Team",
     "note": "Generic term, should use the market's approved translation.",
     "es": "use approved translation: equipo de exito del cliente",
     "de": "use approved translation: Kundenerfolgsteam",
-    "ja": "use approved translation: カスタマーサクセスチーム"
+    "ja": "use approved translation: カスタマーサクセスチーム",
+    "fr": "use approved translation: equipe de reussite client",
+    "pt-BR": "use approved translation: equipe de sucesso do cliente",
+    "ko": "use approved translation: 고객 성공 팀"
   },
   {
     "term": "Terms of Service",
     "note": "Legal document name, should use the market's approved translation.",
     "es": "use approved translation: Terminos de Servicio",
     "de": "use approved translation: Nutzungsbedingungen",
-    "ja": "use approved translation: 利用規約"
+    "ja": "use approved translation: 利用規約",
+    "fr": "use approved translation: Conditions d'Utilisation",
+    "pt-BR": "use approved translation: Termos de Servico",
+    "ko": "use approved translation: 이용 약관"
   },
   {
     "term": "Data Privacy Policy",
     "note": "Legal document name, should use the market's approved translation.",
     "es": "use approved translation: Politica de Privacidad de Datos",
     "de": "use approved translation: Datenschutzrichtlinie",
-    "ja": "use approved translation: データプライバシーポリシー"
+    "ja": "use approved translation: データプライバシーポリシー",
+    "fr": "use approved translation: Politique de Confidentialite des Donnees",
+    "pt-BR": "use approved translation: Politica de Privacidade de Dados",
+    "ko": "use approved translation: 개인정보 처리방침"
   },
   {
     "term": "24/7 Support",
     "note": "Generic term, should use the market's approved translation.",
     "es": "use approved translation: soporte 24/7",
     "de": "use approved translation: 24/7-Support",
-    "ja": "use approved translation: 24時間365日サポート"
+    "ja": "use approved translation: 24時間365日サポート",
+    "fr": "use approved translation: support 24/7",
+    "pt-BR": "use approved translation: suporte 24 horas",
+    "ko": "use approved translation: 24시간 연중무휴 지원"
   },
   {
     "term": "Auto-Renewal",
     "note": "Generic term, should use the market's approved translation.",
     "es": "use approved translation: renovacion automatica",
     "de": "use approved translation: automatische Verlaengerung",
-    "ja": "use approved translation: 自動更新"
+    "ja": "use approved translation: 自動更新",
+    "fr": "use approved translation: renouvellement automatique",
+    "pt-BR": "use approved translation: renovacao automatica",
+    "ko": "use approved translation: 자동 갱신"
   }
 ]

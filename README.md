@@ -1,133 +1,252 @@
 # Global Content Localization Agent
 
-**Cuts the review cycle for launching marketing content into new markets by automatically catching brand-glossary errors and flagging legal/cultural review needs before a human reviewer ever opens the draft.**
+**Maturity:** Streamlit Cloud deployment pending · Synthetic data · Human-review localization workflow
 
-## What this demonstrates
+## 1. Business problem
 
-- Deterministic, rule-based validation of localized copy against a brand glossary -- catching mistranslated "do not translate" terms and missing required-translation terms without any LLM call.
-- Market-specific compliance flagging (e.g. a fictional German advertising-disclosure rule) driven entirely by a data file, so new markets or rules are added without touching code.
-- A native-reviewer approval workflow with a persistent, timestamped audit trail -- the human-in-the-loop pattern that keeps an AI-assisted localization pipeline safe to ship from.
+Content-ops teams launching marketing and product copy into new markets
+need brand terminology, legal/cultural review requirements, and
+native-speaker sign-off checked consistently before a single reviewer ever
+opens a draft.
 
-## What this demo is / What this demo is not
+## 2. What the agent does
 
-**Is:**
+Given a fictional English source asset and one or more target markets, the
+agent produces a first-pass localization draft for each market
+(deterministic mock, or optionally live via Claude), checks that draft
+against a brand glossary's per-language handling rules, attaches
+market-specific legal/cultural review flags from a data-driven rules file,
+and routes the draft through a native-reviewer approval workflow (approve /
+reject / request revision) with a persistent, timestamped audit trail.
 
-- A working, testable demonstration of deterministic glossary compliance checking, data-driven market-rule flagging, and a native-reviewer approval workflow with a persistent, timestamped audit trail.
-- Runnable end-to-end locally, in mock mode, with zero API keys or external services.
-- Backed entirely by synthetic, fictional source content, brand terms, and market rules.
+## 3. What this demo is
 
-**Is not:**
+- A working, testable demonstration of deterministic glossary-compliance
+  checking, data-driven market-rule flagging, and a three-outcome
+  native-reviewer approval workflow with a persistent, timestamped audit
+  trail.
+- Runnable end-to-end locally, in mock mode, with zero API keys or external
+  services.
+- Backed entirely by synthetic, fictional source content, brand terms, and
+  market rules -- 12 source assets across varied content types and 6
+  target markets, seeded in `data/synthetic/`.
+- Public portfolio prototype, synthetic data throughout -- see the banner
+  in the running app.
 
-- Real authentication or authorization -- there is no login, no user accounts, and no access control; the reviewer panel is a UI-level role selector anyone running the app can use.
-- A live integration with any real translation provider, terminology management system, or legal/compliance system -- the only optional live call is the Claude narration/draft path in `src/llm.py`.
-- Hosted anywhere -- there is no deployed URL. Run it locally with the Quickstart commands above.
-- Production-quality, certified, or legally-reviewed translation output, in either mock or live mode. See the Disclaimer at the bottom.
+## 4. What this demo is not
 
-## Demo moment
+- Real authentication or authorization -- there is no login, no user
+  accounts, and no access control; the reviewer panel is a UI-level role
+  selector anyone running the app can use.
+- A live integration with any real translation provider, terminology
+  management system, or legal/compliance system -- the only optional live
+  call is the Claude draft-generation path in `src/llm.py`.
+- Hosted anywhere yet -- there is no deployed URL at the time of this
+  release pass (see Deployment, below).
+- Production-quality, certified, or legally-reviewed translation output, in
+  either mock or live mode. See the Disclaimer at the bottom, and the
+  in-app info box next to the draft results.
 
-Pick the "Product Launch Email" source asset and generate drafts for Spanish, German, and Japanese. The German draft comes back flagged `requires_legal_review` (this demo's fictional EU-DE Advertising Disclosure Rule, ADR-7) with zero glossary violations, because the brand terms "Northfield Cloud," "Nimbus Sync," and "Premium Plan" were correctly left untranslated and "Free Trial" was correctly rendered as "kostenlose Testversion." Switch to the reviewer panel, play the native-speaker role, and approve or reject the draft with notes -- the audit trail immediately shows the `submitted -> approved` (or `rejected`) transition with a timestamp.
+## 5. Key workflow
 
-## Architecture
+1. **Pick a source asset and target market(s).** Choose from 12 fictional
+   assets (emails, landing pages, product descriptions, UI microcopy,
+   social captions, and more) and any of 6 target markets (Spanish, German,
+   Japanese, French, Brazilian Portuguese, Korean).
+2. **Generate localized draft(s).** `src/llm.py` produces the draft text
+   (mock placeholder by default); `src/engine.py` immediately checks it
+   against the brand glossary and attaches market-rule flags.
+3. **Review the draft results.** Each draft shows its review status,
+   glossary-violation count, and flag count, plus the specific violation
+   text and flag reasons.
+4. **Play the native reviewer.** Approve, reject, or request revision on
+   each pending draft, with notes. A rejected or revision-requested draft
+   can be resubmitted for another review pass.
+5. **Inspect the audit trail.** Every state transition is appended,
+   timestamped, to `data/synthetic/audit_log.json` and shown as a table.
+6. **Reset state** whenever you want to return to a clean, empty session.
+
+See `docs/workflow.md` for the full step-by-step flow matching the actual
+UI, and `docs/demo-script.md` for a scripted 60-90 second walkthrough.
+
+## 6. Demo metrics and how each is calculated
+
+The in-app metrics panel shows exactly three numbers, each backed directly
+by code:
+
+| Metric | Value | How it's calculated |
+|---|---|---|
+| Source assets | **12** | `len(source_assets)` in `app.py`, where `source_assets` is loaded directly from `data/synthetic/source_content.json` (also asserted in `tests/test_expanded_markets.py::test_exactly_twelve_source_assets_well_formed`). |
+| Target markets | **6** | `len(market_rules)` in `app.py`, where `market_rules` is loaded directly from `data/synthetic/market_rules.json` (also asserted in `tests/test_expanded_markets.py::test_exactly_six_target_markets_well_formed`). |
+| Localization/review tests | **34** | Hardcoded `VERIFIED_TEST_COUNT = 34` in `app.py`, equal to the literal count of `pytest -v` test cases across `tests/test_engine.py` (12) and `tests/test_expanded_markets.py` (22), verified passing at release time -- see Test and evaluation approach, below. |
+
+Deck metric line: **"12 synthetic source assets · 6 target markets · 34
+localization/review tests."**
+
+## 7. Architecture overview
 
 ```mermaid
 flowchart LR
-    A["Source Content\n(data/synthetic/source_content.json)"] --> B["Translation Layer\n(src/llm.py)\nMock placeholder or live Claude call"]
-    B --> C["Glossary + Market-Rules Validation\n(src/engine.py)"]
+    A["Source Content\n(data/synthetic/source_content.json)\n12 fictional assets"] --> B["Translation Layer\n(src/llm.py)\nMock placeholder or live Claude call"]
+    B --> C["Glossary + Market-Rules Validation\n(src/engine.py)\n6 target markets"]
     C --> D["Flagged Localization Draft\n(LocalizationDraft, src/models.py)"]
-    D --> E["Native Reviewer Approval Workflow\napprove / reject + notes"]
+    D --> E["Native Reviewer Approval Workflow\napprove / request revision / reject + notes"]
     E -->|approved| F["Audit Trail\n(data/synthetic/audit_log.json)"]
-    E -->|rejected: revise and resubmit| B
+    E -->|rejected or revision requested: revise and resubmit| B
     E --> F
 ```
 
-See `docs/architecture.md` for the full component description.
+See `docs/architecture.md` for the full component description and
+`docs/data-model.md` for the exact record shapes.
 
-### Translation vs. transcreation vs. legal review vs. native-speaker QA
+## 8. Integration matrix
 
-This demo treats these as four distinct steps, on purpose:
+| Integration | Status | Notes |
+|---|---|---|
+| LLM narration / draft generation (`src/llm.py`) | `mock` by default, optional `live` | `mock` when `MOCK_MODE=true` (default) -- deterministic, clearly-labeled placeholder, no network call. `live` only when `MOCK_MODE=false` and a valid `ANTHROPIC_API_KEY` is set -- calls Claude (`claude-sonnet-5`) for a first-pass draft, still for human review, not a certified translation. |
+| Translation / terminology management system | `mock` | Glossary is a static local JSON file (`data/synthetic/glossary.json`). No live connection to any real TMS or terminology database exists or is planned as a live path in this repo. |
+| Market/compliance rules engine | `mock` | Market rules are a static local JSON file (`data/synthetic/market_rules.json`), including fictional advertising/e-commerce disclosure rules. No live connection to a real legal/compliance system. |
+| Reviewer routing (email/ticketing) | `planned` | The reviewer panel in `app.py` is an in-app UI role selector only; no real notification, email, or ticketing integration exists yet (see `docs/production-path.md`). |
+| Authentication / authorization | `planned` | Not implemented in this prototype; see `docs/limitations.md`. |
+| Hosted deployment | `planned` | No hosted demo exists yet -- see Deployment instructions, below. |
 
-- **Translation** -- converting source text into a target language, term for term. This is all the mock/live draft step does.
-- **Transcreation** -- creatively adapting tone, wordplay, and imagery for a target culture. **Not attempted here** -- the demo produces a literal draft only.
-- **Legal / regulatory review** -- checking market-specific disclosure or compliance rules (flagged automatically, but the actual review is a human legal step outside this tool).
-- **Native-speaker QA** -- a fluent reviewer confirming the draft reads naturally and respects formality/register norms. That's the reviewer panel in `app.py`.
-
-A clean glossary check does not mean a draft is transcreated, legally cleared, or natural-sounding -- each step is independent, and this demo only automates the first and third (partially).
-
-## Quickstart
+## 9. Local setup
 
 ```bash
 pip install -r requirements.txt
 streamlit run app.py
 ```
 
-Runs entirely in mock mode by default, with zero API keys required. **MOCK_MODE draft text is a clearly-labeled placeholder transform, not a real machine translation** -- see the disclaimer below.
+Runs entirely in mock mode by default, with zero API keys required.
+**MOCK_MODE draft text is a clearly-labeled placeholder transform, not a
+real machine translation** -- see the Disclaimer at the bottom.
 
-## Switching to live mode
+## 10. Environment variables
 
-```bash
-cp .env.example .env
-# then edit .env:
-#   MOCK_MODE=false
-#   ANTHROPIC_API_KEY=sk-ant-...
-```
+Copy `.env.example` to `.env` and edit as needed:
 
-With `MOCK_MODE=false` and a valid `ANTHROPIC_API_KEY`, `src/llm.py` calls Claude (`claude-sonnet-5`) to generate the first-pass localized draft instead of using the deterministic placeholder. The glossary check, market-rule flags, and reviewer workflow all run identically either way.
+| Variable | Default | Purpose |
+|---|---|---|
+| `MOCK_MODE` | `true` | When `true`, all draft generation runs on deterministic, rule-based mock data -- no API key, no network calls. Set to `false` to enable live Claude calls. |
+| `ANTHROPIC_API_KEY` | (empty) | Only required when `MOCK_MODE=false`. Get a key from https://console.anthropic.com/ |
 
-## Human review, escalation & exceptions
+## 11. Deployment instructions
 
-- **Every draft starts `pending`** and requires a human decision (approve or reject) before it can be considered final -- there is no auto-approval path.
-- **Glossary violations and market-rule flags are surfaced, not blocking**: a draft with violations or a `requires_legal_review` / `requires_cultural_review` flag can still be reviewed, but the reviewer sees the exact violation text and flag reason before deciding.
-- **Rejection requires notes**: the reviewer panel is where a native speaker (or legal/cultural reviewer, in a real deployment) records why a draft didn't pass, creating a record for whoever revises it next.
-- **Every transition is audited**: submissions, approvals, and rejections are all appended to `data/synthetic/audit_log.json` with a timestamp, so there's a full history of who decided what, when.
+**Target: Streamlit Community Cloud** (share.streamlit.io).
 
-## Evaluation
+- Repo: this repository.
+- Branch: `main`.
+- Main file: `app.py`.
+- The default mock-mode deploy requires **no secrets**.
+- For live mode, add `ANTHROPIC_API_KEY` (and optionally `MOCK_MODE=false`)
+  in Streamlit Cloud's **Secrets** panel for the app, in `.toml` format,
+  e.g.:
+  ```toml
+  ANTHROPIC_API_KEY = "sk-ant-..."
+  MOCK_MODE = "false"
+  ```
 
-"Correct" for this agent means:
+This release pass did not perform any deployment or hosting action --
+deploying happens separately once Streamlit Cloud is authenticated by the
+repo owner.
 
-1. A "do not translate" glossary term (e.g. the brand name) survives verbatim in every target-language draft where it appears in the source.
-2. A term with an approved market translation (e.g. "Free Trial") is rendered using that exact approved phrase, not left in English and not paraphrased.
-3. Market-rule flags (e.g. `requires_legal_review` for Germany) are attached whenever `market_rules.json` says they should be, and only then.
-4. Every approval or rejection is reflected in both the draft's `review_status` and a new, correctly-ordered entry in the audit log.
+## 12. Test and evaluation approach
+
+See `docs/evaluation-plan.md` for the full evaluation plan (what "correct"
+means for each component, and how each test checks it).
 
 Run the tests:
 
 ```bash
-pytest
+pytest -v
 ```
 
-## Integration status
+**Exact test count at release time: 34 passed** (`tests/test_engine.py`:
+12, `tests/test_expanded_markets.py`: 22).
 
-| Integration | Status | Notes |
-|---|---|---|
-| LLM narration / draft generation (`src/llm.py`) | `mock` by default, optional `real` | `mock` when `MOCK_MODE=true` (default) -- deterministic, clearly-labeled placeholder, no network call. `real` only when `MOCK_MODE=false` and a valid `ANTHROPIC_API_KEY` is set -- calls Claude (`claude-sonnet-5`) for a first-pass draft, still for human review, not a certified translation. |
-| Translation / terminology management system | `mock` | Glossary is a static local JSON file (`data/synthetic/glossary.json`). No live connection to any real TMS or terminology database exists or is planned as a live path in this repo. |
-| Market/compliance rules engine | `mock` | Market rules are a static local JSON file (`data/synthetic/market_rules.json`), including the fictional German advertising-disclosure rule. No live connection to a real legal/compliance system. |
-| Reviewer routing (email/ticketing) | `planned` | The reviewer panel in `app.py` is an in-app UI role selector only; no real notification, email, or ticketing integration exists yet (see Roadmap). |
-| Authentication / authorization | `planned` | Not implemented in this prototype; see the limitation below. |
-| Hosted deployment | `planned` | No hosted demo exists for this prototype -- run locally with the Quickstart commands above. |
+## 13. Accessibility and privacy notes
 
-## Known limitations
+- Built entirely on Streamlit's native widgets (`st.selectbox`,
+  `st.multiselect`, `st.button`, `st.text_area`, `st.metric`,
+  `st.dataframe`), all of which are keyboard-operable and screen-reader
+  labeled by Streamlit itself.
+- Custom focus-order control is limited by what Streamlit exposes --
+  this demo does not add any custom ARIA attributes or focus management on
+  top of Streamlit's defaults, and does not claim to.
+- No PII is collected, stored, or displayed anywhere in this app. All
+  source content, glossary terms, market rules, and reviewer notes
+  entered during a session are either synthetic seed data or ephemeral,
+  session-scoped free text discarded on reset/restart.
 
-**Prototype limitations (intentionally out of scope for a demo):**
+## 14. Known limitations
 
-- No real authentication or authorization -- the reviewer role is a UI selector, not an access-controlled login.
-- No persistent database -- source content, glossary, and market rules are static local JSON files; the audit trail (`data/synthetic/audit_log.json`) is a local file, and in-progress drafts live only in the Streamlit session (lost on refresh/restart).
-- No real translation-memory, terminology-management, or legal/compliance system integration -- see Integration status above.
-- No reviewer notification/routing (email, ticketing) -- reviewing happens synchronously in the same app session.
-- Only three target languages (es, de, ja) and three synthetic source assets are included.
+See `docs/limitations.md` for the full list. In short: no auth, no
+persistent database beyond the local audit-log file, no real
+translation/TMS/legal-system integrations, no reviewer notification
+routing, and a fixed set of 12 source assets and 6 target markets.
 
-**Defects found during this audit:** none. All 12 existing tests pass, and the direct engine-level workflow trace below confirms glossary checking, market-rule flagging, and the reviewer/audit-log workflow all behave as documented.
+## 15. Production-readiness roadmap
 
-## Roadmap
+See `docs/production-path.md` for the full prototype -> pilot ->
+production plan, including rollout and adoption measurement.
 
-- **Prototype** (this repo): deterministic glossary/market-rule checks, mock translation drafts, in-session reviewer workflow and audit trail.
-- **Pilot**: connect to a real glossary/terminology management system and a live translation memory; route flagged drafts to actual legal/cultural reviewers via email or ticketing instead of an in-app panel.
-- **Production controls**: persistent (not session-only) draft storage, role-based access for reviewers, versioned glossary changes, and mandatory legal sign-off gating publication for flagged markets.
-- **Rollout & adoption measurement**: track glossary-violation rate over time, average time-to-approval per market, and rejection reasons to identify which markets or asset types need more upfront translation-memory coverage.
+## 16. Screenshot
+
+Screenshot pending first Streamlit Cloud deploy.
+
+---
+
+## What this demo is / is not, in more detail
+
+### Translation vs. transcreation vs. legal review vs. native-speaker QA
+
+This demo treats these as four distinct steps, on purpose:
+
+- **Translation** -- converting source text into a target language, term
+  for term. This is all the mock/live draft step does.
+- **Transcreation** -- creatively adapting tone, wordplay, and imagery for
+  a target culture. **Not attempted here** -- the demo produces a literal
+  draft only.
+- **Legal / regulatory review** -- checking market-specific disclosure or
+  compliance rules (flagged automatically, but the actual review is a
+  human legal step outside this tool).
+- **Native-speaker QA** -- a fluent reviewer confirming the draft reads
+  naturally and respects formality/register norms. That's the reviewer
+  panel in `app.py`.
+
+A clean glossary check does not mean a draft is transcreated, legally
+cleared, or natural-sounding -- each step is independent, and this demo
+only automates the first and third (partially).
+
+## Human review, escalation & exceptions
+
+- **Every draft starts `pending`** and requires a human decision (approve,
+  reject, or request revision) before it can be considered final -- there
+  is no auto-approval path.
+- **Glossary violations and market-rule flags are surfaced, not
+  blocking**: a draft with violations or a `requires_legal_review` /
+  `requires_cultural_review` flag can still be reviewed, but the reviewer
+  sees the exact violation text and flag reason before deciding.
+- **Rejection and revision requests both create a record**: the reviewer
+  panel is where a native speaker (or legal/cultural reviewer, in a real
+  deployment) records why a draft didn't pass or what needs to change,
+  creating a record for whoever revises it next. A rejected or
+  revision-requested draft can be resubmitted for another review pass.
+- **Every transition is audited**: submissions, approvals, rejections, and
+  revision requests are all appended to `data/synthetic/audit_log.json`
+  with a timestamp, so there's a full history of who decided what, when.
 
 ## Disclaimer
 
-All source content, brand names, glossary terms, and market rules in this repo are synthetic and fictional, created for portfolio demonstration purposes only. `MOCK_MODE` draft output is a deterministic placeholder transform -- **it is not a real translation and must not be treated as production-quality localization, legal advice, or a substitute for a qualified native-speaker translator or reviewer.**
+All source content, brand names, glossary terms, and market rules in this
+repo are synthetic and fictional, created for portfolio demonstration
+purposes only. `MOCK_MODE` draft output is a deterministic placeholder
+transform -- **it is not a real translation and must not be treated as
+production-quality localization, legal advice, or a substitute for a
+qualified native-speaker translator or reviewer.** Localization drafts
+produced by this agent, in mock or live mode, do not replace legal,
+regulatory, or local-market review -- see the in-app info box next to the
+draft results.
 
 ## License
 

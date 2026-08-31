@@ -7,12 +7,18 @@ data is used anywhere in this repo.
 from dataclasses import dataclass, field
 from typing import List, Optional
 
-# review_status is a simple "enum-like" str with three valid values.
+# review_status is a simple "enum-like" str with four valid values.
 REVIEW_PENDING = "pending"
 REVIEW_APPROVED = "approved"
 REVIEW_REJECTED = "rejected"
+REVIEW_REVISION_REQUESTED = "revision_requested"
 
-VALID_REVIEW_STATUSES = (REVIEW_PENDING, REVIEW_APPROVED, REVIEW_REJECTED)
+VALID_REVIEW_STATUSES = (
+    REVIEW_PENDING,
+    REVIEW_APPROVED,
+    REVIEW_REJECTED,
+    REVIEW_REVISION_REQUESTED,
+)
 
 
 @dataclass
@@ -30,9 +36,11 @@ class LocalizationDraft:
             glossary rule that this draft appears to violate.
         flags: market-rule flags attached to this draft, e.g.
             "requires_legal_review" or "requires_cultural_review".
-        review_status: one of "pending" | "approved" | "rejected".
+        review_status: one of "pending" | "approved" | "rejected" |
+            "revision_requested".
         reviewer_notes: free-text notes left by the native reviewer,
-            required in practice for a rejection, optional for an approval.
+            required in practice for a rejection or a revision request,
+            optional for an approval.
     """
 
     source_id: str

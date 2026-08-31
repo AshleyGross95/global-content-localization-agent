@@ -16,5 +16,59 @@
     "title": "Subscription Renewal Notice",
     "asset_type": "transactional notice",
     "body": "This is a reminder that your Northfield Cloud Premium Plan is set for Auto-Renewal next month. If you would like to make changes, contact our Customer Success Team before the renewal date. Your Northfield ID and billing details remain unchanged."
+  },
+  {
+    "id": "product-description-01",
+    "title": "Nimbus Sync Feature Description",
+    "asset_type": "product description",
+    "body": "Nimbus Sync is the file-syncing engine built into every Northfield Cloud Premium Plan. It keeps documents current across desktop, mobile, and web without manual uploads. If a sync conflict ever occurs, our Customer Success Team can help you resolve it in minutes."
+  },
+  {
+    "id": "ui-microcopy-01",
+    "title": "Account Settings UI Microcopy",
+    "asset_type": "UI microcopy",
+    "body": "Your Northfield ID is how you sign in to Northfield Cloud. Manage your Premium Plan, review your Data Privacy Policy preferences, or contact 24/7 Support from this screen."
+  },
+  {
+    "id": "social-caption-01",
+    "title": "Product Announcement Social Caption",
+    "asset_type": "social caption",
+    "body": "Big news: Nimbus Sync just got faster. Start a Free Trial of the Premium Plan today and see why teams choose Northfield Cloud. Questions? Our Customer Success Team is always here."
+  },
+  {
+    "id": "push-notification-01",
+    "title": "Sync Complete Push Notification",
+    "asset_type": "push notification",
+    "body": "Nimbus Sync just finished updating your files on this device. Your Northfield Cloud Premium Plan keeps everything backed up automatically."
+  },
+  {
+    "id": "onboarding-tooltip-01",
+    "title": "First-Run Onboarding Tooltip",
+    "asset_type": "in-app onboarding tooltip",
+    "body": "Welcome! This is your Northfield ID. Use it to sign in anywhere. Nimbus Sync is already turned on for your Free Trial, so your files start syncing right away."
+  },
+  {
+    "id": "support-macro-01",
+    "title": "Billing Question Support Macro",
+    "asset_type": "customer support macro",
+    "body": "Thanks for reaching out about your Northfield Cloud Premium Plan. I can see your Auto-Renewal date on file. Our Customer Success Team can pause or adjust it before the next billing cycle -- just let us know what you'd like to change."
+  },
+  {
+    "id": "blog-intro-01",
+    "title": "Product Blog Post Introduction",
+    "asset_type": "blog post intro",
+    "body": "Every growing team eventually hits the same wall: files scattered across a dozen tools and nobody sure which version is current. Northfield Cloud was built to fix that, and Nimbus Sync is the feature that makes it disappear entirely."
+  },
+  {
+    "id": "webinar-invite-01",
+    "title": "Webinar Invitation Email",
+    "asset_type": "marketing email",
+    "body": "Join our Customer Success Team for a live walkthrough of the Northfield Cloud Premium Plan. We'll cover Nimbus Sync setup, review the Data Privacy Policy basics every admin should know, and leave time for questions."
+  },
+  {
+    "id": "faq-snippet-01",
+    "title": "Help Center FAQ Snippet",
+    "asset_type": "help center article",
+    "body": "How do I cancel Auto-Renewal? Sign in with your Northfield ID, open Premium Plan settings, and turn off Auto-Renewal before your next billing date. Still stuck? Our Customer Success Team offers 24/7 Support."
   }
 ]

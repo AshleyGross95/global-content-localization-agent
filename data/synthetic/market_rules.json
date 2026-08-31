@@ -19,5 +19,27 @@
     "requires_cultural_review": true,
     "cultural_review_reason": "Fictional cultural-fit policy: external business communications are checked for appropriate keigo (honorific register) and indirect phrasing before release.",
     "formality_note": "Use keigo (polite/formal register) appropriate for external business communication; avoid the direct imperative phrasing common in English marketing copy."
+  },
+  "fr": {
+    "market_name": "France (French)",
+    "requires_legal_review": true,
+    "legal_review_reason": "Fictional French Consumer Code Disclosure Rule (Loi ABC-12): promotional copy referencing a free trial or auto-renewal distributed in France must carry an explicit cancellation-terms disclosure reviewed by legal before send.",
+    "requires_cultural_review": false,
+    "formality_note": "Use the formal 'vous' register for external business communications; avoid the informal 'tu' form."
+  },
+  "pt-BR": {
+    "market_name": "Brazil (Portuguese)",
+    "requires_legal_review": false,
+    "requires_cultural_review": true,
+    "cultural_review_reason": "Fictional regional-variant review policy: copy is checked to confirm it reads as Brazilian Portuguese rather than European Portuguese phrasing, since the two markets are not interchangeable.",
+    "formality_note": "Use a warm but professional 'voce' register typical of Brazilian business communication; avoid the more formal European Portuguese conjugations."
+  },
+  "ko": {
+    "market_name": "South Korea (Korean)",
+    "requires_legal_review": true,
+    "legal_review_reason": "Fictional Korean E-Commerce Disclosure Rule (KEC-15): subscription pricing, free-trial, and auto-renewal terms distributed to Korean customers must carry an explicit disclosure reviewed by legal before send.",
+    "requires_cultural_review": true,
+    "cultural_review_reason": "Fictional honorific-register policy: external business communications are checked for consistent use of formal honorifics (jondaemal) before release.",
+    "formality_note": "Use formal honorific speech (jondaemal/hasipsio-che) throughout; avoid casual or half-form (banmal) phrasing in external communications."
   }
 }

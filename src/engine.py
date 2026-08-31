@@ -26,6 +26,7 @@ from src.models import (
     REVIEW_APPROVED,
     REVIEW_PENDING,
     REVIEW_REJECTED,
+    REVIEW_REVISION_REQUESTED,
     LocalizationDraft,
 )
 
@@ -200,10 +201,19 @@ def record_review_decision(
     reviewer_notes: str = "",
     audit_log_path: Optional[str] = None,
 ) -> LocalizationDraft:
-    """Approve or reject a draft, logging the transition to the audit log."""
-    if decision not in (REVIEW_APPROVED, REVIEW_REJECTED):
+    """Approve, reject, or request revision on a draft, logging the transition.
+
+    `decision` must be one of REVIEW_APPROVED, REVIEW_REJECTED, or
+    REVIEW_REVISION_REQUESTED. A revision request is distinct from a
+    rejection: it signals "close, but the native reviewer wants specific
+    changes before this can be approved," rather than a hard no. A draft
+    that has revision requested (like a rejected one) can be resubmitted
+    for review via `submit_for_review` once the draft text is updated.
+    """
+    valid_decisions = (REVIEW_APPROVED, REVIEW_REJECTED, REVIEW_REVISION_REQUESTED)
+    if decision not in valid_decisions:
         raise ValueError(
-            f"decision must be '{REVIEW_APPROVED}' or '{REVIEW_REJECTED}', got {decision!r}"
+            f"decision must be one of {valid_decisions}, got {decision!r}"
         )
 
     previous_status = draft.review_status

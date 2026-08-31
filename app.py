@@ -2,8 +2,8 @@
 
 Pick a source marketing asset and one or more target languages, generate
 localized drafts, see the brand-glossary check and market-rule flags for
-each, then play the native-reviewer role: approve or reject each draft with
-notes, and inspect the resulting audit trail.
+each, then play the native-reviewer role: approve, reject, or request
+revision on each draft with notes, and inspect the resulting audit trail.
 
 Runs entirely on synthetic data. See README.md for the full walkthrough.
 """
@@ -20,12 +20,28 @@ from src.engine import (
     submit_for_review,
 )
 from src.llm import is_mock_mode
-from src.models import REVIEW_APPROVED, REVIEW_PENDING, REVIEW_REJECTED
+from src.models import (
+    REVIEW_APPROVED,
+    REVIEW_PENDING,
+    REVIEW_REJECTED,
+    REVIEW_REVISION_REQUESTED,
+)
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "synthetic")
 AUDIT_LOG_PATH = os.path.join(DATA_DIR, "audit_log.json")
 
-LANGUAGE_LABELS = {"es": "Spanish (es)", "de": "German (de)", "ja": "Japanese (ja)"}
+LANGUAGE_LABELS = {
+    "es": "Spanish (es)",
+    "de": "German (de)",
+    "ja": "Japanese (ja)",
+    "fr": "French (fr)",
+    "pt-BR": "Portuguese, Brazil (pt-BR)",
+    "ko": "Korean (ko)",
+}
+
+# Hardcoded to the actual verified `pytest -v` count for this repo (tests/test_engine.py
+# + tests/test_expanded_markets.py) -- update this literal if the test suite grows.
+VERIFIED_TEST_COUNT = 34
 
 st.set_page_config(page_title="Global Content Localization Agent", page_icon="🌐", layout="wide")
 
@@ -53,6 +69,26 @@ st.caption(
     "glossary, flags markets needing legal/cultural review, and routes drafts through "
     "a native-reviewer approval workflow with a full audit trail."
 )
+st.markdown("**Public portfolio prototype · Synthetic data**")
+
+metric_cols = st.columns(4)
+with metric_cols[0]:
+    # Literal count of records in data/synthetic/source_content.json.
+    st.metric("Source assets", len(source_assets))
+with metric_cols[1]:
+    # Literal count of keys in data/synthetic/market_rules.json.
+    st.metric("Target markets", len(market_rules))
+with metric_cols[2]:
+    # Hardcoded to the verified `pytest -v` count -- see VERIFIED_TEST_COUNT above.
+    st.metric("Localization/review tests", VERIFIED_TEST_COUNT)
+with metric_cols[3]:
+    if st.button("Reset state", help="Clears the session audit log and all generated drafts back to empty."):
+        st.session_state.drafts = {}
+        os.makedirs(DATA_DIR, exist_ok=True)
+        with open(AUDIT_LOG_PATH, "w", encoding="utf-8") as f:
+            json.dump([], f)
+        st.success("Session audit log and drafts reset to empty.")
+        st.rerun()
 
 mock_mode = is_mock_mode()
 if mock_mode:
@@ -141,6 +177,13 @@ st.divider()
 # ---------------------------------------------------------------------------
 
 st.header("2. Draft results")
+st.info(
+    "These localization drafts (mock or live) do not replace legal, regulatory, or "
+    "local-market review. Glossary checks and market-rule flags below catch specific, "
+    "narrow issues only -- a clean result is not legal sign-off, cultural sign-off, or "
+    "confirmation the copy reads naturally to a native speaker.",
+    icon="⚖️",
+)
 
 current_keys = [
     key for key in st.session_state.drafts if key[0] == selected_asset["id"]
@@ -196,7 +239,8 @@ st.divider()
 
 st.header("3. Native reviewer panel")
 st.caption(
-    "Play the native-speaker reviewer role: approve or reject each pending draft, with notes."
+    "Play the native-speaker reviewer role: approve, reject, or request revision on each "
+    "pending draft, with notes."
 )
 
 pending_keys = [
@@ -212,7 +256,7 @@ else:
         with st.container(border=True):
             st.write(f"**{draft.source_id} -> {lang_label}** (status: {draft.review_status})")
             notes = st.text_area("Reviewer notes", key=f"notes_{key}", height=80)
-            btn_cols = st.columns(2)
+            btn_cols = st.columns(3)
             with btn_cols[0]:
                 if st.button("Approve", key=f"approve_{key}"):
                     record_review_decision(
@@ -220,6 +264,12 @@ else:
                     )
                     st.rerun()
             with btn_cols[1]:
+                if st.button("Request revision", key=f"revise_{key}"):
+                    record_review_decision(
+                        draft, REVIEW_REVISION_REQUESTED, notes, audit_log_path=AUDIT_LOG_PATH
+                    )
+                    st.rerun()
+            with btn_cols[2]:
                 if st.button("Reject", key=f"reject_{key}"):
                     record_review_decision(
                         draft, REVIEW_REJECTED, notes, audit_log_path=AUDIT_LOG_PATH
@@ -229,16 +279,28 @@ else:
 reviewed_keys = [
     key for key, d in st.session_state.drafts.items() if d.review_status != REVIEW_PENDING
 ]
+STATUS_ICONS = {
+    REVIEW_APPROVED: "✅",
+    REVIEW_REJECTED: "❌",
+    REVIEW_REVISION_REQUESTED: "✏️",
+}
 if reviewed_keys:
     st.caption("Reviewed drafts:")
     for key in reviewed_keys:
         draft = st.session_state.drafts[key]
         lang_label = LANGUAGE_LABELS.get(draft.target_language, draft.target_language)
-        status_icon = "✅" if draft.review_status == REVIEW_APPROVED else "❌"
-        st.write(
-            f"{status_icon} **{draft.source_id} -> {lang_label}**: {draft.review_status} "
-            f"-- \"{draft.reviewer_notes or ''}\""
-        )
+        status_icon = STATUS_ICONS.get(draft.review_status, "•")
+        row_cols = st.columns([4, 1])
+        with row_cols[0]:
+            st.write(
+                f"{status_icon} **{draft.source_id} -> {lang_label}**: {draft.review_status} "
+                f"-- \"{draft.reviewer_notes or ''}\""
+            )
+        with row_cols[1]:
+            if draft.review_status in (REVIEW_REJECTED, REVIEW_REVISION_REQUESTED):
+                if st.button("Resubmit for review", key=f"resubmit_{key}"):
+                    submit_for_review(draft, audit_log_path=AUDIT_LOG_PATH)
+                    st.rerun()
 
 st.divider()
 
